@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+    main_app:
+        build: ./
+        restart: always
+        ports:
+            - 5000:5000
+        expose:
+            - 5000
+        volumes:
+            - ./mongodb:/usr/src/app/mongodb
+        command: python -u app.py
+        links:
+            - datastore
+    datastore:
+        image: mongo:latest
+        volumes:
+            - ./mongodb/:/data/db
+        expose:
+            - 27017
+        ports:
+            - 27017:27017
+        restart: always
+
+
