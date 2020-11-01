@@ -6,17 +6,22 @@ from bson.json_util import dumps
 
 class MongoAPI:
     '''Main DB API'''
-    def __init__(self):
+    def __init__(self, deploy_option):
         log.basicConfig(handlers=[log.FileHandler(filename="log_app.txt", encoding='utf-8', mode='a+')], level=log.DEBUG, format='%(asctime)s - %(message)s')
 
-        #For local tests only
-        client = MongoClient("mongodb://localhost:27017/")
+        self.deploy_option = deploy_option
 
-        #For docker-compose based deploy
-        #client = MongoClient("mongodb://datastore:27017/")
+        if self.deploy_option == "localhost":
+            #For local tests only
+            client = MongoClient("mongodb://localhost:27017/")
+        elif self.deploy_option == "docker":
+            #For docker-compose based deploy
+            client = MongoClient("mongodb://datastore:27017/")
+        else:
+            #Try local deploy
+            client = MongoClient("mongodb://datastore:27017/")
 
         database = client['store_db']
-
         self.collection = database['orders']
 
     def find_orders(self, order_id_list):
@@ -73,4 +78,6 @@ class MongoAPI:
         return output
 
     def clear_db(self):
+        '''Clear all DB'''
         deleted = self.collection.delete_many({})
+        return deleted

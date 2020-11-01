@@ -10,7 +10,7 @@ services:
             - 5000
         volumes:
             - ./mongodb:/usr/src/app/mongodb
-        command: python -u app.py
+        command: python -u app.py --deploy docker
         links:
             - datastore
     datastore:

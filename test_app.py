@@ -1,3 +1,4 @@
+'''Basic API tests'''
 import unittest
 import json
 
@@ -5,20 +6,21 @@ from app import app
 from mongoapi import MongoAPI
 
 class FlaskTestCase(unittest.TestCase):
-    '''Basic API tests'''
+    '''Basic API tests class'''
 
     def setUp(self):
+        '''Test setup'''
         self.app = app.test_client()
-        self.api = MongoAPI()
+        self.api = MongoAPI("localhost")
         self.api.clear_db()
 
-    # Ensure that Flask was set up correctly
     def test_index(self):
+        '''Ensure that Flask was set up correctly'''
         response = self.app.get('/', content_type='application/json')
         self.assertEqual('UP', response.json['Status'])
 
-    # Ensure POST method DB add order is working
     def test_database_add(self):
+        '''Ensure POST method DB add order is working'''
         # Given
         payload = json.dumps({
             "Order_ID": 1,
@@ -37,6 +39,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(possible_response1, response.json['Status'])
         self.assertEqual(response.status_code, 200)
 
+        # When
         response = self.app.post('/ordersdb', headers={"Content-Type": "application/json"}, data=payload)
 
         # Then
@@ -44,8 +47,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.api.clear_db()
 
-        # Ensure PUT method DB update order is working
     def test_database_update(self):
+        '''Ensure PUT method DB update order is working'''
         # Given
         payload1 = json.dumps({
             "Order_ID": 1,
@@ -80,8 +83,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.api.clear_db()
 
-    # Ensure GET method DB find order is working
     def test_database_get(self):
+        '''Ensure GET method DB find order is working'''
         # Given
         payload1 = json.dumps({
             "Order_ID": 1,
@@ -115,8 +118,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.api.clear_db()
 
-    # Ensure DELETE method DB delete order is working
     def test_database_delete(self):
+        '''Ensure DELETE method DB delete order is working'''
         # Given
         payload1 = json.dumps({
             "Order_ID": 1,
@@ -146,6 +149,10 @@ class FlaskTestCase(unittest.TestCase):
 
         self.assertEqual(possible_response2, response.json['Status'])
         self.assertEqual(response.status_code, 200)
+        self.api.clear_db()
+
+    def cleanUp(self):
+        '''Test cleanup'''
         self.api.clear_db()
 
 if __name__ == '__main__':

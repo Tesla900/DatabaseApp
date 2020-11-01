@@ -1,0 +1,209 @@
+openapi: 3.0.0
+
+info:
+  version: "1.0"
+  title: MyWebAppAPI
+  description: API to my simple CRUD database web app
+
+servers:
+  - url: http://localhost:5000
+    description: Test server
+
+#  ----- Added lines  ----------------------------------------
+paths:
+  /ordersdb:
+#  ---- /Added lines  ----------------------------------------
+    post:
+      tags:
+      - "Possible commands"
+      summary: "Add a new order into DB"
+      requestBody:
+        description: "Allows you to add a new order into DB"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order successfully writed / Nothing was writed
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/OK'
+                - $ref: '#/components/schemas/Error'
+              examples:
+                SuccessfullyWrited:
+                  value:
+                    Status: "Order successfully writed"
+                OrderExists:
+                  value:
+                    Status: "Nothing was writed"
+        '400':
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+
+#  ---- /Added lines  ----------------------------------------
+    put:
+      tags:
+      - "Possible commands"
+      summary: "Update order in DB"
+      requestBody:
+        description: "Allows you to update order in DB"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: "Order successfully updated / Nothing was updated"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/OK'
+                - $ref: '#/components/schemas/Error'
+              examples:
+                SuccessfullyWrited:
+                  value:
+                    Status: "Order successfully writed"
+                OrderExists:
+                  value:
+                    Status: "Nothing was writed"
+
+        '400':
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+#  ---- /Added lines  ----------------------------------------
+    get:
+      tags:
+      - "Possible commands"
+      summary: "Find order(s) in DB"
+      requestBody:
+        description: "Allows you to find one or multiple orders in DB"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FindOrders'
+      responses:
+        '200':
+          description: "Order successfully found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+        '400':
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+#  ---- /Added lines  ----------------------------------------
+    delete:
+      tags:
+      - "Possible commands"
+      summary: "Delete order from DB"
+      requestBody:
+        description: "Allows you to find delete order from DB"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteOrder'
+      responses:
+        '200':
+          description: "Order successfully found"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/OK'
+                - $ref: '#/components/schemas/Error'
+              examples:
+                SuccessfullyDeleted:
+                  value:
+                    Status: "Order successfully deleted"
+                OrderNotFound:
+                  value:
+                    Status: "Order not found"
+
+        '400':
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+components:
+  schemas:
+    OK:
+      type: object
+      properties:
+        Status:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        Status:
+          type: string
+    Order:
+      type: object
+      required:
+        - Order_ID
+        - Order_list
+        - Total_price
+        - Phone
+        - Email
+      properties:
+        Order_ID:
+          type: integer
+          example: 1
+        Order_list:
+          type: array
+          items:
+            type: string
+          example:
+            [apple, banana, orange]
+        Total_price:
+            type: number
+            example: 127.25
+        Phone:
+            type: string
+            example: "+380504568985"
+        Email:
+            type: string
+            format: email
+            example: "user@example.com"
+    FindOrders:
+      type: object
+      properties:
+        Order_ID:
+          type: array
+          items:
+            type: number
+          example:
+            [1, 2, 3]
+    DeleteOrder:
+      type: object
+      properties:
+        Order_ID:
+          type: number
+          example: 1
+    Error400:
+      type: object
+      properties:
+        Error:
+          type: string
+          example: Please provide order information
+
+#  ---- /Added lines  ----------------------------------------
