@@ -143,6 +143,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error400'
+#  ---- /Added lines  ----------------------------------------
+
 components:
   schemas:
     OK:
@@ -205,5 +207,5 @@ components:
         Error:
           type: string
           example: Please provide order information
-
 #  ---- /Added lines  ----------------------------------------
+  

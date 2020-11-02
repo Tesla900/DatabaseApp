@@ -128,6 +128,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Logs
+.log
+
 #Custom dirs
 .vscode/
 __pycache__/
+mongodb/*
+
+!mongodb/.gitkeep
